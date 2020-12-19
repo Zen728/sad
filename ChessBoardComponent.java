@@ -26,14 +26,16 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
     public ChessBoardComponent(int size, int dimension, int endDimension) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         setLayout(null); // Use absolute layout
-        setSize(size, size);
+        setSize(size, size);//说明是正方形，这是整个棋盘的边长
 
-        this.gridComponents = new SquareComponent[4][dimension + endDimension];
+        this.gridComponents = new SquareComponent[4][dimension + endDimension];//dimension=13,endDimension=6 ,  4应该是表示4种颜色
         this.dimension = dimension;
         this.endDimension = endDimension;
-        this.gridSize = size / (dimension + 1);
-        initGridComponents();
+        this.gridSize = size / (dimension + 1);//说明是把0当作首位，所以dimension的实际意义是每行的格子数是14个
+
     }
+/* 这个破demo非要自己画棋盘，还非要用二进制位运算符计算格子的位置，气死我了。是不是故意炫技，故意让人看不懂？这要我怎么改棋盘构造？ 直接JLabel对象弄张棋盘的图片不就好了吗？
+
 
     private int gridLocation(int player, int index) {
         // FIXME: Calculate proper location for each grid
@@ -52,11 +54,14 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
             x = 0;
             y = (4 * dimension - boardIndex) * gridSize;
         }
-        return x << 16 | y;
+
+        int i = x << 16 | y;
+        return i;
     }
 
     private int endGridLocation(int player, int index) {
         // FIXME: Calculate proper location for each end grid
+        // 发现只要注释的开头打fixme字体就会变黄!
         int beforeEndGridLocation = gridLocation(player, dimension - 1);
         int x = beforeEndGridLocation >> 16, y = beforeEndGridLocation & 0xffff;
         if (y == 0) {
@@ -77,6 +82,8 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
                 int gridLocation = gridLocation(player, index);
                 gridComponents[player][index] = new SquareComponent(gridSize, BOARD_COLORS[player], player, index);
                 gridComponents[player][index].setLocation(gridLocation >> 16, gridLocation & 0xffff);
+                //这是两种二进制位操作符，相当于加减乘除的操作，后面是一个16进制整数
+
                 add(gridComponents[player][index]);
             }
             for (int index = dimension; index < dimension + endDimension; index++) {
@@ -86,7 +93,8 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
                 add(gridComponents[player][index]);
             }
         }
-    }
+
+    }*/
 
     public SquareComponent getGridAt(ChessBoardLocation location) {
         return gridComponents[location.getColor()][location.getIndex()];
